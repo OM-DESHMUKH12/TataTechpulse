@@ -1,0 +1,9 @@
+question_id,question,expected_terms
+Q01,Which component validates the simulated speed range?,VehicleSpeedSensorAdapter|0 and 250 km/h|invalid
+Q02,Which interface does the display consume?,InstrumentClusterDisplay|VehicleSpeedData|VehicleSpeedService
+Q03,What happens after 500 milliseconds without a valid update?,500 ms|unavailable indicator|InstrumentClusterDisplay
+Q04,Which events does DiagnosticMonitor record?,invalid-sample|timeout_count|DiagnosticMonitor
+Q05,What is the upper allowed speed in the synthetic example?,250 km/h|VehicleSpeedSensorAdapter|invalid
+Q06,Which component timestamps valid samples?,VehicleSpeedService|timestamp|VehicleSpeedData
+Q07,Name the example test for nonnumeric input,T04|fast|invalid
+Q08,Is this document approved for production use?,not approved|production use|synthetic

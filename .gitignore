@@ -1,0 +1,20 @@
+# Python generated files
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local secrets
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# Large demo recordings (keep locally)
+Video/*.mp4
+Video/*.mov
+Video/*.avi
+
+# Editor files
+.vscode/
+.idea/

@@ -1,0 +1,34 @@
+{
+  "application": "AutoDoc AI",
+  "retrieval": {
+    "method": "scikit-learn TfidfVectorizer",
+    "ngram_range": [
+      1,
+      2
+    ],
+    "similarity": "cosine",
+    "default_top_k": 4,
+    "chunk_words": 180,
+    "overlap_words": 35
+  },
+  "llm": {
+    "provider": "Ollama local HTTP API (optional)",
+    "default_model_name": "llama3.2:3b",
+    "endpoint": "http://localhost:11434",
+    "enabled_by_default": false,
+    "actual_used_model": "RECORD AFTER TESTING; do not assume default model was used"
+  },
+  "embeddings": "Not used in current prototype; TF-IDF sparse lexical vectors are used instead.",
+  "vector_store": "None; chunks are held in Streamlit session memory.",
+  "external_dependencies": [
+    "Python package installation may require internet access",
+    "Optional Ollama service is local; no cloud LLM API is called by this code"
+  ],
+  "known_limits": [
+    "No OCR for scanned PDFs",
+    "No persistent vector database",
+    "TF-IDF is lexical rather than semantic retrieval",
+    "No authentication or role-based access control",
+    "Not a production or safety-compliance tool"
+  ]
+}

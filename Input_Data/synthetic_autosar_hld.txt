@@ -1,0 +1,58 @@
+SYNTHETIC AUTOMOTIVE HIGH-LEVEL DESIGN (HLD)
+Document ID: SYN-HLD-001
+Version: 1.0
+Status: Educational synthetic example — not an OEM design and not normative AUTOSAR content.
+
+1. Purpose and scope
+This sample describes a fictional vehicle-speed display function for an educational AutoDoc AI demonstration. It illustrates component descriptions, interfaces, data flow, and test ideas. It must not be used to implement or certify a real vehicle function.
+
+2. Software components
+VehicleSpeedSensorAdapter (VSSA) reads a simulated speed value from the input abstraction. It validates that the value is numeric and between 0 and 250 km/h. Values outside this range are marked invalid.
+VehicleSpeedService (VSS) receives validated speed samples from VSSA. It adds a timestamp and publishes the latest valid speed through the VehicleSpeedData interface.
+InstrumentClusterDisplay (ICD) subscribes to VehicleSpeedData and displays the speed value in km/h. If no valid update arrives for 500 ms, the display changes to an unavailable indicator.
+DiagnosticMonitor (DM) records invalid input events and counts communication timeouts. It exposes a read-only diagnostic status for the demonstration.
+
+3. Interfaces and data
+VehicleSpeedData is a sender/receiver-style conceptual interface containing speed_kmh (float), timestamp_ms (integer), and validity (boolean).
+DiagnosticStatus contains invalid_sample_count (integer), timeout_count (integer), and last_event (string).
+The VehicleSpeedService publishes VehicleSpeedData. InstrumentClusterDisplay consumes VehicleSpeedData. DiagnosticMonitor observes validation and timeout events.
+These interface names are invented for this sample and do not claim conformance to an AUTOSAR release or methodology.
+
+4. Functional flow
+Step 1: VehicleSpeedSensorAdapter receives a simulated speed sample.
+Step 2: The adapter checks type and range. If invalid, it raises an invalid-sample event and does not publish the value as valid.
+Step 3: VehicleSpeedService timestamps valid samples and publishes VehicleSpeedData.
+Step 4: InstrumentClusterDisplay receives the update and renders speed_kmh.
+Step 5: If the display receives no valid update for 500 ms, it displays an unavailable indicator.
+Step 6: DiagnosticMonitor updates the invalid-sample counter and timeout counter.
+
+5. Dependencies
+InstrumentClusterDisplay depends on VehicleSpeedData from VehicleSpeedService.
+VehicleSpeedService depends on validated samples from VehicleSpeedSensorAdapter.
+DiagnosticMonitor observes events from the adapter, service, and display timeout monitor.
+No cloud service or external network is required by this fictional data flow.
+
+6. Error handling and limitations
+Input values below 0 km/h, above 250 km/h, or of a nonnumeric type are invalid.
+The 500 ms timeout is an illustrative design choice for the synthetic example only.
+The example does not specify real-time scheduling, memory constraints, ASIL, cybersecurity controls, calibration, hardware interfaces, or production diagnostics.
+The design has not been reviewed by an automotive safety engineer and is not a production specification.
+
+7. Example test ideas
+T01: Input 42.0 km/h. Expected: adapter accepts the sample and the service publishes a valid VehicleSpeedData update.
+T02: Input -1 km/h. Expected: sample is invalid; DiagnosticMonitor records an invalid-sample event.
+T03: Input 251 km/h. Expected: sample is invalid; no valid speed update is published.
+T04: Input "fast" as text. Expected: sample is invalid.
+T05: No valid update for 500 ms. Expected: InstrumentClusterDisplay shows an unavailable indicator and a timeout is counted.
+T06: Valid input 0 km/h. Expected: zero is accepted because it is within the stated inclusive range.
+
+8. Traceability summary
+Requirement R1: Accept numeric simulated speed from 0 through 250 km/h inclusive. Component: VehicleSpeedSensorAdapter. Tests: T01, T03, T06.
+Requirement R2: Reject nonnumeric and out-of-range samples. Components: VehicleSpeedSensorAdapter, DiagnosticMonitor. Tests: T02, T03, T04.
+Requirement R3: Publish timestamped valid speed. Component: VehicleSpeedService. Test: T01.
+Requirement R4: Show unavailable indicator when no valid update arrives for 500 ms. Component: InstrumentClusterDisplay. Test: T05.
+Requirement R5: Record invalid samples and timeouts. Component: DiagnosticMonitor. Tests: T02, T05.
+
+9. Document control
+Author: Educational sample generated for a student capstone prototype.
+Approval: Not approved for production use.
